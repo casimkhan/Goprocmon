@@ -1,0 +1,38 @@
+package main
+
+import (
+    "fmt"
+    "os"
+
+    "github.com/Microsoft/process-monitor-live/processmonitor"
+)
+
+func main() {
+    if len(os.Args) < 2 {
+        fmt.Println("Usage: go run main.go <process-id-or-name>")
+        return
+    }
+
+    pidOrName := os.Args[1]
+
+    pm := processmonitor.NewProcessMonitor()
+    defer pm.Close()
+
+    pm.Start()
+
+    // Filter events by process id or name
+    pm.AddFilter("ProcessId", pidOrName)
+    pm.AddFilter("ProcessName", pidOrName)
+
+    // Output file system, registry, process, child process, thread, and network events
+    pm.AddInclude("FileSystem", "*")
+    pm.AddInclude("Registry", "*")
+    pm.AddInclude("Process", "*")
+    pm.AddInclude("Thread", "*")
+    pm.AddInclude("Network", "*")
+
+    // Print events to the console
+    pm.OnEvent(func(e processmonitor.Event) {
+        fmt.Println(e)
+    })
+}
