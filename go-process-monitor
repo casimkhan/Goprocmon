@@ -4,7 +4,6 @@ import (
     "fmt"
     "os"
     "syscall"
-
     "github.com/Microsoft/go-winio"
 )
 
